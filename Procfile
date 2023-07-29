@@ -1,1 +1,2 @@
-worker: python3 -m SmartEncoder
+
+worker: bash start.sh
