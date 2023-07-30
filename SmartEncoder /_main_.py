@@ -1,5 +1,4 @@
 # i am using redis db. Its quite handy and easy. i used lists for queue. and redis can only store bytes, str, int or float. so i used codecs to encode list[0] in str then stored in db. when using the stored str, i equated it later decoded it back in its original type using 'codecs' module.
-from . import TGBot
 import logging
 import asyncio 
 import time
@@ -26,13 +25,13 @@ from datetime import datetime as dt
 #from SmartEncoder.Plugins.compress import *
 # database 
 from SmartEncoder.Database.db import myDB
-import SmartEncoder.Plugins.Labour
-from SmartEncoder.Plugins.Queue import *
-from SmartEncoder.Plugins.list import *
+import SmartEncoder.Plungins.Labour
+from SmartEncoder.Plungins.Queue import *
+from SmartEncoder.Plungins.list import *
 from SmartEncoder.Tools.eval import *
 from SmartEncoder.Addons.download import d_l
 from SmartEncoder.Addons.executor import bash_exec
-from SmartEncoder.Plugins.cb import *
+from SmartEncoder.Plungins.cb import *
 from SmartEncoder.Addons.list_files import l_s
 from SmartEncoder.translation import Translation
 from SmartEncoder.Tools.progress import *
@@ -90,7 +89,7 @@ async def wah_1_man(bot, message: Message):
  
 
   @TGBot.on_message(filters.incoming & filters.command("rename_mode", prefixes=["/", "."]))
-  async def help_eval_message(bot, message):
+      async def help_eval_message(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
       return
     OUT = "Rename Mode Has Been Enabled."
@@ -105,7 +104,7 @@ async def wah_1_man(bot, message: Message):
     await eval_handler(bot, message)
   
   @TGBot.on_message(filters.command("dl", prefixes=["/", "."]))
-  async def start_cmd_handler(bot, update):
+      async def start_cmd_handler(bot, update):
     if update.from_user.id not in Config.AUTH_USERS:
       return
     await d_l(bot, update)
@@ -329,5 +328,5 @@ async def wah_1_man(bot, message: Message):
     cb_things
   )
   TGBot.add_handler(cb_bro)
-  asyncio.get_event_loop().run_until_complete(start_bot())
+  asyncio.get_event().run_until_complete(start_bot)
   
