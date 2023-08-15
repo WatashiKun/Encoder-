@@ -6,5 +6,4 @@ RUN apt-get update \
   && apt-get -y install python3-pip \
   && pip install --no-cache-dir -r requirements.txt
 COPY . .
-CMD ["start.sh"]
-ENTRYPOINT ["bash"]
+CMD ["bash", "start.sh"]
