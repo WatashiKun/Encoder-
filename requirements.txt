@@ -1,6 +1,6 @@
 Pyrogram==1.4
 tgcrypto 
-ethon==1.0.7
+ethon==0.1.5
 redis
 anitopy
 psutil
