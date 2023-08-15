@@ -1,1 +1,1 @@
-worker: python3 -m Smartencoder
+worker: python3 -m SmartRncoder
