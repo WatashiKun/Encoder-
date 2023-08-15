@@ -64,6 +64,8 @@ async def start_bot():
 if __name__ == "__main__":
   @TGBot.on_message(filters.incoming & (filters.video | filters.document))
 async def wah_1_man(bot, message: Message):
+       await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename task
+ 
     if mode_for_custom[0] == "off":
         if message.from_user.id not in Config.AUTH_USERS:
             return
