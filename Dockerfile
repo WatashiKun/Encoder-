@@ -14,7 +14,9 @@ RUN apt-get update && \
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN git clone -b encoder https://github.com/Tobigod123/SmartEncoder /root/encoder
+
 
 COPY . .
 
-CMD ["python3", "-m", "start.sh"]
+CMD ["bash", "start"]
