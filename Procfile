@@ -1,1 +1,1 @@
-worker: python3 -m _main_.py
+worker: python3 -m SmartEncoder 
