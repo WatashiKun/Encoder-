@@ -5,3 +5,4 @@ redis
 anitopy
 psutil
 python-dotenv
+ffmpeg-python
