@@ -89,46 +89,43 @@ async def help_eval_message(bot, message):
     rename_task.insert(0, "on")
     
     
-  @TGBot.on_message(filters.incoming & filters.command("eval", prefixes=["/", "."]))
-  async def help_eval_message(bot, message):
+@TGBot.on_message(filters.incoming & filters.command("eval", prefixes=["/", "."]))
+async def help_eval_message(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     await eval_handler(bot, message)
   
-  @TGBot.on_message(filters.command("dl", prefixes=["/", "."]))
-      async def start_cmd_handler(bot, update):
+@TGBot.on_message(filters.command("dl", prefixes=["/", "."]))
+async def start_cmd_handler(bot, update):
     if update.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     await d_l(bot, update)
 
-  @TGBot.on_message(filters.command("ul", prefixes=["/", "."]))
-  async def u_l(bot, message):
+@TGBot.on_message(filters.command("ul", prefixes=["/", "."]))
+async def u_l(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     c_time = time.time()
     input_message = message.text.split(" ", maxsplit=1)[1]
     path = Path(input_message)
- # start = datetime.now()
     if not os.path.exists(path):
-      await message.reply_text(f"No such file or directory as `{path}` found", quote=True)
-      return
+        await message.reply_text(f"No such file or directory as `{path}` found", quote=True)
+        return
     boa = await message.reply_text("**UPLOADING**", quote=True)
     await bot.send_document(
-      chat_id=message.chat.id,
-      document=path,
-      force_document=True,
-      #caption="©️ @Animes_Encoded",
-      reply_to_message_id=message.message_id,
-      progress=progress_for_pyrogram,
-      progress_args=(bot, "UPLOADING", boa, c_time)
+        chat_id=message.chat.id,
+        document=path,
+        force_document=True,
+        reply_to_message_id=message.message_id,
+        progress=progress_for_pyrogram,
+        progress_args=(bot, "UPLOADING", boa, c_time)
     )
     await boa.delete()
   
-# bash
-  @TGBot.on_message(filters.command("bash", prefixes=["/", "."]))
-  async def start_cmd_handler(bot, message):
+@TGBot.on_message(filters.command("bash", prefixes=["/", "."]))
+async def start_cmd_handler(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     await bash_exec(bot, message)
 
 # ls
