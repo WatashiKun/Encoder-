@@ -6,6 +6,7 @@ WORKDIR /root/encoder
 
 COPY requirements.txt .
 
+COPY setup.py 
 
 RUN apt-get update && \
     apt-get install -y sudo && \
