@@ -90,14 +90,6 @@ if __name__ == "__main__":
         OUT = "Rename Mode Has Been Enabled."
         await message.reply_text(OUT, quote=True)
         rename_task.insert(0, "on")  # Assuming add_rename() is a function to process the rename task
-
-@TGBot.on_message(filters.incoming & filters.command("rename_mode", prefixes=["/", "."]))
-async def help_eval_message(bot, message):
-    if message.from_user.id not in Config.AUTH_USERS:
-        return
-    OUT = "Rename Mode Has Been Enabled."
-    await message.reply_text(OUT, quote=True)
-    rename_task.insert(0, "on")
     
     
   @TGBot.on_message(filters.incoming & filters.command("eval", prefixes=["/", "."]))
