@@ -12,7 +12,7 @@ from pyrogram.types import Message
 from SmartEncoder.Database.db import myDB
 from SmartEncoder.Plugins.list import *
 
-from SmartEncoder.__main__ import *
+from SmartEncoder._main_ import *
 from SmartEncoder.Plugins.renamer import rename_pro
 
 async def on_task_complete(bot, message: Message):
