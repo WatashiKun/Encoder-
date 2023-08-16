@@ -87,12 +87,11 @@ async def wah_1_man(bot, message: Message):
             if len(rename_queue) == 1:
                 await query.delete()
                 await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename task
- 
 
-  @TGBot.on_message(filters.incoming & filters.command("rename_mode", prefixes=["/", "."]))
-      async def help_eval_message(bot, message):
+@TGBot.on_message(filters.incoming & filters.command("rename_mode", prefixes=["/", "."]))
+async def help_eval_message(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     OUT = "Rename Mode Has Been Enabled."
     await message.reply_text(OUT, quote=True)
     rename_task.insert(0, "on")
