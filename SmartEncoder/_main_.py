@@ -298,4 +298,4 @@ cb_bro = CallbackQueryHandler(
     cb_things
 )
 TGBot.add_handler(cb_bro)
-asyncio.get_event().run_until_complete(start_bot)
+asyncio.get_event_loop().run_until_complete(start_bot)
