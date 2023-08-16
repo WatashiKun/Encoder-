@@ -1,29 +1,20 @@
-# i am using redis db. Its quite handy and easy. i used lists for queue. and redis can only store bytes, str, int or float. so i used codecs to encode list[0] in str then stored in db. when using the stored str, i equated it later decoded it back in its original type using 'codecs' module.
 import logging
 import asyncio 
 import time
-import pickle # to dumps/loads 
-import codecs # to encode/decode basically
-#import requests
-#import json cuz i dont nedd this fucking module
-#import urllib3 as url ahh
+import pickle
+import codecs
 
 logging.basicConfig(
-    level=logging.DEBUG, 
+    level=logging.DEBUG,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
-
-
 from pyrogram import Client
 from pyrogram.types import CallbackQuery
 from pyrogram.handlers import MessageHandler, CallbackQueryHandler
-
 from pyrogram.errors import FloodWait
 from datetime import datetime as dt
-#from SmartEncoder.Plugins.compress import *
-# database 
 from SmartEncoder.Database.db import myDB
 import SmartEncoder.Plungins.Labour
 from SmartEncoder.Plungins.Queue import *
@@ -39,30 +30,31 @@ from config import Config
 from pyrogram import filters, Client, idle
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from pathlib import Path
+
 mode_for_custom = []
 uptime = dt.now()
 mode_for_custom.append("off")
 
 
-
 async def resume_task():
-  if myDB.llen("DBQueue") > 0:
-    queue_ = myDB.lindex("DBQueue", 0)
-    _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
-    await add_task(TGBot, _queue)
-      
-      
+    if myDB.llen("DBQueue") > 0:
+        queue_ = myDB.lindex("DBQueue", 0)
+        _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
+        await add_task(TGBot, _queue)
+
+
 async def start_bot():
-  await TGBot.start()
-  await resume_task()
-  await idle()
+    await TGBot.start()
+    await resume_task()
+    await idle()
 
 
-#if __name__ == "__main__":
-    #loop.run_untill_complete(start_bot())
-#rename_task.insert(0, "on")
 if __name__ == "__main__":
-  @TGBot.on_message(filters.incoming & (filters.video | filters.document))
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(start_bot())
+
+
+@TGBot.on_message(filters.incoming & (filters.video | filters.document))
 async def wah_1_man(bot, message: Message):
     if mode_for_custom[0] == "off":
         if message.from_user.id not in Config.AUTH_USERS:
@@ -86,12 +78,12 @@ async def wah_1_man(bot, message: Message):
             if len(rename_queue) == 1:
                 await query.delete()
                 await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename task
- 
 
-  @TGBot.on_message(filters.incoming & filters.command("rename_mode", prefixes=["/", "."]))
-      async def help_eval_message(bot, message):
+
+@TGBot.on_message(filters.incoming & filters.command("rename_mode", prefixes=["/", "."]))
+async def help_eval_message(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     OUT = "Rename Mode Has Been Enabled."
     await message.reply_text(OUT, quote=True)
     rename_task.insert(0, "on")
