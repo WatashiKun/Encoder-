@@ -1,6 +1,6 @@
 from config import Config
 import re
-from SmartEncoder.__main__ import *
+from SmartEncoder._main_ import *
 from SmartEncoder.Tools.progress import *
 
 from typing import Tuple, List, Optional, Iterator, Union
