@@ -30,7 +30,7 @@ from config import Config
 from pyrogram import filters, Client, idle
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from pathlib import Path
-
+from SmartEncoder import TGBot
 mode_for_custom = []
 uptime = dt.now()
 mode_for_custom.append("off")
