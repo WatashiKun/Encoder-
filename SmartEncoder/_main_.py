@@ -45,21 +45,20 @@ mode_for_custom.append("off")
 
 
 async def resume_task():
-  if myDB.llen("DBQueue") > 0:
-    queue_ = myDB.lindex("DBQueue", 0)
-    _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
-    await add_task(TGBot, _queue)
+    if myDB.llen("DBQueue") > 0:
+        queue_ = myDB.lindex("DBQueue", 0)
+        _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
+        await add_task(TGBot, _queue)
       
 async def start_bot():
-  await TGBot.start()
-  await resume_task()
-  await idle()
+    await TGBot.start()
+    await resume_task()
+    await idle()
 
-
-#if __name__ == "__main__":
-    #loop.run_untill_complete(start_bot())
-#rename_task.insert(0, "on")
 if __name__ == "__main__":
+    # loop.run_untill_complete(start_bot())
+    # rename_task.insert(0, "on")
+    pass 
 
 
 @TGBot.on_message(filters.incoming & (filters.video | filters.document))
