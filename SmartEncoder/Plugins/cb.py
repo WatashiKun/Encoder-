@@ -1,4 +1,4 @@
-from SmartEncoder.__main__ import *
+from SmartEncoder._main_ import *
 from pyrogram.types import CallbackQuery
 from SmartEncoder.translation import Translation
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
