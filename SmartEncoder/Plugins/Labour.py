@@ -3,7 +3,7 @@ import os
 import time
 import asyncio 
 from config import Config
-#from SmartEncoder.__main__ import *
+from SmartEncoder._main_ import *
 
 from SmartEncoder.Plugins.compress import en_co_de
 from SmartEncoder.Tools.progress import *
