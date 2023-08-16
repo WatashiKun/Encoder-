@@ -58,7 +58,7 @@ mode_for_custom.append("off")
 async def resume_task():
     if myDB.llen("DBQueue") > 0:
         queue_ = myDB.lindex("DBQueue", 0)
-       update_queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
+        queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
         await add_task(TGBot, _queue)
       
 async def start_bot():
