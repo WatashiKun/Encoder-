@@ -59,13 +59,13 @@ async def resume_task():
     if myDB.llen("DBQueue") > 0:
         queue_ = myDB.lindex("DBQueue", 0)
         queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
-        await add_task(TGBot, _queue)
+        await add_task(TGBot, queue)
       
 async def start_bot():
-    await TGBot.start()
-    await resume_task()
-    await idle()
-
+      await TGBot.start()
+      await resume_task()
+      await idle()
+  
 if __name__ == "__main__":
     # loop.run_untill_complete(start_bot())
     # rename_task.insert(0, "on")
