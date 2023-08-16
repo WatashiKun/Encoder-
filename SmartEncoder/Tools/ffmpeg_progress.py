@@ -4,7 +4,7 @@ from ethon.pyfunc import total_frames as tf
 import asyncio
 import subprocess 
 import re
-from SmartEncoder.__main__ import *
+from SmartEncoder._main_ import *
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 
 
