@@ -10,7 +10,7 @@ import time
 import traceback
 
 from config import Config
-from SmartEncoder.__main__ import *
+from SmartEncoder._main_ import *
 from SmartEncoder.Plugins.list import *# yea 
 from SmartEncoder.Database.db import myDB
 from logging.handlers import RotatingFileHandler
