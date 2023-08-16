@@ -16,13 +16,13 @@ from pyrogram.handlers import MessageHandler, CallbackQueryHandler
 from pyrogram.errors import FloodWait
 from datetime import datetime as dt
 from SmartEncoder.Database.db import myDB
-import SmartEncoder.Plungins.Labour
-from SmartEncoder.Plungins.Queue import *
-from SmartEncoder.Plungins.list import *
+import SmartEncoder.Plugins.Labour
+from SmartEncoder.Plugins.Queue import *
+from SmartEncoder.Plugins.list import *
 from SmartEncoder.Tools.eval import *
 from SmartEncoder.Addons.download import d_l
 from SmartEncoder.Addons.executor import bash_exec
-from SmartEncoder.Plungins.cb import *
+from SmartEncoder.Plugins.cb import *
 from SmartEncoder.Addons.list_files import l_s
 from SmartEncoder.translation import Translation
 from SmartEncoder.Tools.progress import *
