@@ -195,8 +195,8 @@ async def set_quality(bot, message):
     await message.reply_text(OUT, quote=True)
 
 # ... (continue with the remaining functions)
-  
- @TGBot.on_message(filters.command("codec"))
+
+@TGBot.on_message(filters.command("codec"))
 async def set_codec(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
         return
