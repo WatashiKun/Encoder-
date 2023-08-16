@@ -1,3 +1,12 @@
 build:
   docker:
-    worker: Dockerfile
+    web: Dockerfile
+
+release:
+  image: web
+  command:
+    - "bash"
+    - "start"
+
+run:
+  web: python manage.py runserver 0.0.0.0:$PORT
