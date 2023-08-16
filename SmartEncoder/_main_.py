@@ -39,6 +39,7 @@ from config import Config
 from pyrogram import filters, Client, idle
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from pathlib import Path
+from SmartEncoder.__init__ import *
 mode_for_custom = []
 uptime = dt.now()
 mode_for_custom.append("off")
