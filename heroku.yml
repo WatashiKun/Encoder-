@@ -1,12 +1,3 @@
 build:
   docker:
     web: Dockerfile
-
-release:
-  image: web
-  command:
-    - "bash"
-    - "start"
-
-run:
-  web: python3 -m SmartEncoder
