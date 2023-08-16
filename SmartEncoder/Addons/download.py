@@ -1,6 +1,6 @@
 from config import Config
 
-from SmartEncoder.__main__ import *
+from SmartEncoder._main_ import *
 
 from SmartEncoder.Plugins.compress import *
 
