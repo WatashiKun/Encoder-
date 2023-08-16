@@ -294,8 +294,8 @@ async def clear_queue(bot, message):
     myDB.delete("DBQueue")
     await message.reply_text("Successfully cleared queue and removed from the database.", quote=True)
 
-cb_bro = CallbackQueryHandler(
+ cb_bro = CallbackQueryHandler(
     cb_things
-)
-TGBot.add_handler(cb_bro)
-asyncio.get_event_loop().run_until_complete(start_bot)
+  )
+  TGBot.add_handler(cb_bro)
+  asyncio.get_event_loop().run_until_complete(start_bot())
