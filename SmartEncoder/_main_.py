@@ -128,49 +128,41 @@ async def start_cmd_handler(bot, message):
         return
     await bash_exec(bot, message)
 
-# ls
-  @TGBot.on_message(filters.incoming & filters.command("ls", prefixes=["/", "."]))
-  async def lost_files(bot, message):
+@TGBot.on_message(filters.incoming & filters.command("ls", prefixes=["/", "."]))
+async def lost_files(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     await l_s(bot, message)
 
-# disable normal mode
-  @TGBot.on_message(filters.command("manual_mode", prefixes=["/", "."]))
-  async def hehe(bot, message):
+@TGBot.on_message(filters.command("manual_mode", prefixes=["/", "."]))
+async def disable_normal_mode(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return 
-    await message.reply_text("I will now wont respond to any file! Reply me with /dl and /ul", quote=True)
+        return 
+    await message.reply_text("I will now not respond to any file! Reply me with /dl and /ul", quote=True)
     mode_for_custom.insert(0, "on")
-  
-# able normal mode
-  @TGBot.on_message(filters.command("normal_mode", prefixes=["/", "."]))
-  async def hehe(bot, message):
+
+@TGBot.on_message(filters.command("normal_mode", prefixes=["/", "."]))
+async def enable_normal_mode(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return 
+        return 
     await message.reply_text("I will now respond to any sent file", quote=True)
     mode_for_custom.insert(0, "off")
     rename_task.insert(0, "off")
-  
 
-# start
-  @TGBot.on_message(filters.command("start", prefixes=["/", "."]))
-  async def start_cmd_handler(bot, message):
+@TGBot.on_message(filters.command("start", prefixes=["/", "."]))
+async def start_cmd_handler(bot, message):
     await message.reply_text(
-      text=Translation.START_TEXT,
-      reply_markup=InlineKeyboardMarkup(
-        [
-          [
-            InlineKeyboardButton("📕Channel", url="https://t.me/AniVoid")
-          ],
-        ],
-      ),
-      parse_mode="md"
+        text=Translation.START_TEXT,
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [InlineKeyboardButton("📕Channel", url="https://t.me/AniVoid")]
+            ],
+        ),
+        parse_mode="md"
     )
 
-# ping
-  @TGBot.on_message(filters.incoming & filters.command(["ping"]))
-  async def up(app, message):
+@TGBot.on_message(filters.incoming & filters.command(["ping"]))
+async def ping(app, message):
     stt = dt.now()
     ed = dt.now()
     v = TimeFormatter(int((ed - uptime).seconds) * 1000)
@@ -178,144 +170,124 @@ async def start_cmd_handler(bot, message):
     p = f"🌋Pɪɴɢ = {ms}ms"
     await message.reply_text(v + "\n" + p)
 
-# restart 
-  @TGBot.on_message(filters.command("restart"))
-  async def re(bot, message):
+@TGBot.on_message(filters.command("restart"))
+async def restart_bot(bot, message):
     if message.chat.id in Config.AUTH_USERS:
-      await message.reply_text("•Restarting")
-      quit(1)
-  
-# to change ffmpeg variables 
-  @TGBot.on_message(filters.command("crf"))
-  async def re(bot, message):
+        await message.reply_text("•Restarting")
+        quit(1)
+
+@TGBot.on_message(filters.command("crf"))
+async def set_crf(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     cr = message.text.split(" ", maxsplit=1)[1]
-    OUT = f"I will be using : {cr} crf"
+    OUT = f"I will be using: {cr} crf"
     myDB.set('crf', f'{cr}')
     await message.reply_text(OUT, quote=True)
 
-  @TGBot.on_message(filters.command("quality"))
-  async def re(bot, message):
+@TGBot.on_message(filters.command("quality"))
+async def set_quality(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     cr = message.text.split(" ", maxsplit=1)[1]
-    OUT = f"I will be using : {cr} quality."
+    OUT = f"I will be using: {cr} quality."
     myDB.set('quality', f'{cr}')
     await message.reply_text(OUT, quote=True)
+
+# ... (continue with the remaining functions)
   
-  @TGBot.on_message(filters.command("codec"))
-  async def re(bot, message):
+ @TGBot.on_message(filters.command("codec"))
+async def set_codec(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     cr = message.text.split(" ", maxsplit=1)[1]
-    OUT = f"I will be using : {cr} codec"
+    OUT = f"I will be using: {cr} codec"
     myDB.set('codec', f'{cr}')
     await message.reply_text(OUT, quote=True)
-  
-  @TGBot.on_message(filters.command("audio"))
-  async def re(bot, message):
+
+@TGBot.on_message(filters.command("audio"))
+async def set_audio(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     _any = message.text.split(" ", maxsplit=1)[1]
-    #OUT = "This feature has been removed.\nLibopus audio codec is replaced by Libfdk_aac.\nIt requires vbr instead of audio bitrates.\nDefault vbr is set to `2`.\nYou don't have to change it."
-    #myDB.set('audio', f'{cr}')
     audio_.insert(0, f"{_any}")
     await message.reply_text(f"Fine! Your files are {_any} audio 👀", quote=True)
-  
-  @TGBot.on_message(filters.command("resolution"))
-  async def re(bot, message):
+
+@TGBot.on_message(filters.command("resolution"))
+async def set_resolution(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     cr = message.text.split(" ", maxsplit=1)[1]
-    #OUT = f"I have changed my gear to {cr}"
-    #myDB.set('speed', f'{cr}')
     OUT = f"<b>I will use {cr} quality in renaming files<b>"
     quality_.insert(0, f"{cr}")
     await message.reply_text(OUT, quote=True)
-  
-  
-  @TGBot.on_message(filters.command("preset"))
-  async def re(bot, message):
+
+@TGBot.on_message(filters.command("preset"))
+async def set_preset(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     cr = message.text.split(" ", maxsplit=1)[1]
-    #OUT = f"I have changed my gear to {cr}"
-    #myDB.set('speed', f'{cr}')
     OUT = f"I will use {cr} preset in encoding files."
     myDB.set("speed", f"{cr}")
     await message.reply_text(OUT, quote=True)
   
 # audio_mode ( for libopus and libfdk_aac support )
-
-  @TGBot.on_message(filters.command("audio_codec"))
-  async def re_codec_(bot, message):
+@TGBot.on_message(filters.command("audio_codec"))
+async def set_audio_codec(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     cr = message.text.split(" ", maxsplit=1)[1]
-    #OUT = f"I have changed my gear to {cr}"
-    #myDB.set('speed', f'{cr}')
     OUT = f"<b>I will use {cr} audio codec in encoding files.<b>"
-    #quality_.insert(0, f"{cr}")
     myDB.set("Audio_Codec", f"{cr}")
     await message.reply_text(OUT, quote=True)
-    
-# watermark positio
-  @TGBot.on_message(filters.command("watermark_position"))
-  async def re_w_(bot, message):
+
+@TGBot.on_message(filters.command("watermark_position"))
+async def set_watermark_position(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     cr = message.text.split(" ", maxsplit=1)[1]
-    #OUT = f"I have changed my gear to {cr}"
-    #myDB.set('speed', f'{cr}')
-    OUT = f"<b>I have set watermark postion to top {cr} corner.<b>"
-    #quality_.insert(0, f"{cr}")
+    OUT = f"<b>I have set watermark position to top {cr} corner.<b>"
     myDB.set("w_p", f"{cr}")
-    if myDB.get("w_p") == "Left" or "left":
-      myDB.set("w_po","10")
-    elif myDB.get("w_p") == "Right" or "right":
-      myDB.set("w_po", "w-tw-10")
+    if myDB.get("w_p") in ["Left", "left"]:
+        myDB.set("w_po", "10")
+    elif myDB.get("w_p") in ["Right", "right"]:
+        myDB.set("w_po", "w-tw-10")
     await message.reply_text(OUT, quote=True)
-# settings
-# settings
-  @TGBot.on_message(filters.incoming & filters.command(["settings"]))
-  async def settings(app, message):
+
+@TGBot.on_message(filters.incoming & filters.command(["settings"]))
+async def show_settings(app, message):
     if message.from_user.id in Config.AUTH_USERS:
-      await message.reply_text(
-        f"🏷 **Video** \n┏━━━━━━━━━━━━━━━━━\n┣ Codec  ➜ ```{myDB.get('codec')}```\n┣ **Crf**  ➜ ```{myDB.get('crf')}``` \n┣ **Resolution**  ➜ ```{myDB.get('quality')}```\n┗━━━━━━━━━━━━━━━━━\n\n🏷  **Audio** \n┏━━━━━━━━━━━━━━━━━\n┣ **Codec**  ➜ ```{myDB.get('Audio_Codec')}```\n┣  **Bitrates** ➜ ```40k```\n┗━━━━━━━━━━━━━━━━━\n\n🏷 **Watermark**\n┏━━━━━━━━━━━━━━━━━\n┣ **Position** ➜ ```{myDB.get('w_p')}```\n┣ **Size**  ➜ ```{myDB.get('size')}```\n┗━━━━━━━━━━━━━━━━━\n\n🏷 **Speed**\n┏━━━━━━━━━━━━━━━━━\n┣ **Preset** ➜ ```{myDB.get('speed')}```\n┗━━━━━━━━━━━━━━━━━",
-        quote=True
-      )
-      
-  @TGBot.on_message(filters.incoming & filters.command(["size"]))
-  async def size(app, message):
+        await message.reply_text(
+            f"🏷 **Video**\n┏━━━━━━━━━━━━━━━━━\n┣ Codec  ➜ ```{myDB.get('codec')}```\n┣ **Crf**  ➜ ```{myDB.get('crf')}``` \n┣ **Resolution**  ➜ ```{myDB.get('quality')}```\n┗━━━━━━━━━━━━━━━━━\n\n🏷  **Audio**\n┏━━━━━━━━━━━━━━━━━\n┣ **Codec**  ➜ ```{myDB.get('Audio_Codec')}```\n┣  **Bitrates** ➜ ```40k```\n┗━━━━━━━━━━━━━━━━━\n\n🏷 **Watermark**\n┏━━━━━━━━━━━━━━━━━\n┣ **Position** ➜ ```{myDB.get('w_p')}```\n┣ **Size**  ➜ ```{myDB.get('size')}```\n┗━━━━━━━━━━━━━━━━━\n\n🏷 **Speed**\n┏━━━━━━━━━━━━━━━━━\n┣ **Preset** ➜ ```{myDB.get('speed')}```\n┗━━━━━━━━━━━━━━━━━",
+            quote=True
+        )
+
+@TGBot.on_message(filters.incoming & filters.command(["size"]))
+async def set_watermark_size(app, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     cr = message.text.split(" ", maxsplit=1)[1]
     OUT = f"Fine! I have set the watermark text size to `{cr}`"
     await message.reply_text(OUT, quote=True)
     myDB.set("size", f"{cr}")
-    
-    
-  # name
-  @TGBot.on_message(filters.incoming & filters.command(["name"]))
-  async def settings(app, message):
+
+@TGBot.on_message(filters.incoming & filters.command(["name"]))
+async def set_name(app, message):
     if message.from_user.id not in Config.AUTH_USERS:
-      return
+        return
     cr = message.text.split(" ", maxsplit=1)[1]
     OUT = f"Fine! I have set the name text to be `{cr}`"
     await message.reply_text(OUT, quote=True)
-    name.insert(0, f"{cr}")
-  # databases
-  @TGBot.on_message(filters.incoming & filters.command("clear", prefixes=["/", "."]))
-  async def lost_files(bot, message):
+
+@TGBot.on_message(filters.incoming & filters.command("clear", prefixes=["/", "."]))
+async def clear_queue(bot, message):
     if message.chat.id not in Config.AUTH_USERS:
-      return
+        return
     myDB.delete("DBQueue")
-    await message.reply_text("Successfully cleared queue and removed from database.", quote=True)
-  
-  cb_bro = CallbackQueryHandler(
+    await message.reply_text("Successfully cleared queue and removed from the database.", quote=True)
+
+cb_bro = CallbackQueryHandler(
     cb_things
-  )
-  TGBot.add_handler(cb_bro)
-  asyncio.get_event().run_until_complete(start_bot)
-  
+)
+TGBot.add_handler(cb_bro)
+asyncio.get_event().run_until_complete(start_bot)
