@@ -138,7 +138,7 @@ async def help_eval_message(bot, message):
     rename_task.insert(0, "on")
     
     
-@TGBot.on_message(filters.incoming & filters.command("eval", prefixes=["/", "."]))
+TGBot.on_message(filters.incoming & filters.command("eval", prefixes=["/", "."]))
 async def help_eval_message(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
         return
