@@ -59,7 +59,7 @@ async def resume_task():
   if myDB.llen("DBQueue") > 0:
     queue_ = myDB.lindex("DBQueue", 0)
     _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
-    await add_task(TGBot, _queue)
+    await add_task(TGBot, _queue) ( from SmartEncoder.Plugins.Queue )
       
       
 async def start_bot():
