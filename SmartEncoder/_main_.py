@@ -72,11 +72,13 @@ async def start_bot():
     #loop.run_untill_complete(start_bot())
 #rename_task.insert(0, "on")
 if __name__ == "__main__":
-@TGBot.on_message(filters.incoming & (filters.video | filters.document))
-async def wah_1_man(bot, message: Message):
-    if mode_for_custom[0] == "off":
-        if message.from_user.id not in Config.AUTH_USERS:
-            return
+    # Your other imports and setup code here
+    
+    @TGBot.on_message(filters.incoming & (filters.video | filters.document))
+    async def wah_1_man(bot, message: Message):
+        if mode_for_custom[0] == "off":
+            if message.from_user.id not in Config.AUTH_USERS:
+                return
 
         if rename_task[0] == "off":
             query = await message.reply_text("Added this file to queue.\nCompression will start soon.", quote=True)
