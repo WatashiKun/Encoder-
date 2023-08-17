@@ -55,16 +55,26 @@ uptime = dt.now()
 mode_for_custom.append("off")
 
 
-async def resume_task():
-    if myDB.llen("DBQueue") > 0:
-        queue_ = myDB.lindex("DBQueue", 0)
-        queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
-        await add_task(TGBot, queue)
+return
 
-async def start_bot():
-      await TGBot.start()
-      await resume_task()
-      await idle()
+        if rename_task[0] == "off":
+            query = await message.reply_text("Added this file to queue.\nCompression will start soon.", quote=True)
+            a = message  # using 'a' as message is easy
+            pickled = codecs.encode(pickle.dumps(a), "base64").decode()
+            myDB.rpush("DBQueue", pickled)  # Assuming myDB is the Redis database connection
+            if myDB.llen("DBQueue") == 1:
+                await query.delete()
+                await add_task(bot, message)  # Assuming add_task() is a function to process the task
+
+        else:
+            if message.from_user.id not in Config.AUTH_USERS:
+                return
+
+            query = await message.reply_text("**Added this file to rename in queue.**", quote=True)
+            rename_queue.append(message)  # Assuming rename_queue is a list for renaming tasks
+            if len(rename_queue) == 1:
+                await query.delete()
+                await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename
   
 if __name__ == "__main__":
     # loop.run_untill_complete(start_bot())
