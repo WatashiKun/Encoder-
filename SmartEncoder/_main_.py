@@ -55,7 +55,28 @@ uptime = dt.now()
 mode_for_custom.append("off")
 
 
-return
+async def resume_task():
+  if myDB.llen("DBQueue") > 0:
+    queue_ = myDB.lindex("DBQueue", 0)
+    _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
+    await add_task(TGBot, _queue)
+      
+      
+async def start_bot():
+  await TGBot.start()
+  await resume_task()
+  await idle()
+
+
+#if __name__ == "__main__":
+    #loop.run_untill_complete(start_bot())
+#rename_task.insert(0, "on")
+if __name__ == "__main__":
+  @TGBot.on_message(filters.incoming & (filters.video | filters.document))
+async def wah_1_man(bot, message: Message):
+    if mode_for_custom[0] == "off":
+        if message.from_user.id not in Config.AUTH_USERS:
+            return
 
         if rename_task[0] == "off":
             query = await message.reply_text("Added this file to queue.\nCompression will start soon.", quote=True)
@@ -74,7 +95,7 @@ return
             rename_queue.append(message)  # Assuming rename_queue is a list for renaming tasks
             if len(rename_queue) == 1:
                 await query.delete()
-                await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename
+                await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename task
   
 if __name__ == "__main__":
     # loop.run_untill_complete(start_bot())
