@@ -68,11 +68,7 @@ async def resume_task():
         _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
         await add_task(TGBot, _queue)
 
-# Rest of your code
-# ...
-
- if __name__ == "__main__":
-    # Call your functions or define your setup her
+#if __name__ == "__main__":
 @TGBot.on_message(filters.incoming & (filters.video | filters.document))
 async def wah_1_man(bot, message: Message):
     if mode_for_custom[0] == "off":
