@@ -73,7 +73,6 @@ async def resume_task():
 
 if __name__ == "__main__":
     # Call your functions or define your setup here
-    await resume_task()
     
 @TGBot.on_message(filters.incoming & (filters.video | filters.document))
 async def wah_1_man(bot, message: Message):
