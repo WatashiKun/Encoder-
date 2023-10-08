@@ -101,8 +101,11 @@ if __name__ == "__main__":
     # loop.run_untill_complete(start_bot())
     # rename_task.insert(0, "on")
     pass 
-
-
+# Define the add_task function
+async def add_task(bot, message):
+    # Your task processing logic here
+    pass
+   
 @TGBot.on_message(filters.incoming & (filters.video | filters.document))
 async def wah_1_man(bot, message: Message):
     if mode_for_custom[0] == "off":
