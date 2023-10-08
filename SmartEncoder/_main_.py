@@ -78,35 +78,36 @@ async def wah_1_man(bot, message: Message):
         if message.from_user.id not in Config.AUTH_USERS:
             return
 
-    if rename_task[0] == "off":
-        query = await message.reply_text("Added this file to queue.\nCompression will start soon.", quote=True)
-        a = message  # using 'a' as message is easy
-        pickled = codecs.encode(pickle.dumps(a), "base64").decode()
-        myDB.rpush("DBQueue", pickled)  # Assuming myDB is the Redis database connection
-        if myDB.llen("DBQueue") == 1:
-            await query.delete()
+        if rename_task[0] == "off":
+            query = await message.reply_text("Added this file to queue.\nCompression will start soon.", quote=True)
+            a = message  # using 'a' as message is easy
+            pickled = codecs.encode(pickle.dumps(a), "base64").decode()
+            myDB.rpush("DBQueue", pickled)  # Assuming myDB is the Redis database connection
+            if myDB.llen("DBQueue") == 1:
+                await query.delete()
 
-            # Download the file
-            file_path = await bot.download_media(
-                message=message,
-                file_name=os.path.join(Config.DOWNLOAD_LOCATION, "downloaded_file")
-            )
+                # Download the file
+                file_path = await bot.download_media(
+                    message=message,
+                    file_name=os.path.join(Config.DOWNLOAD_LOCATION, "downloaded_file")
+                )
 
-            if file_path:
-                await add_task(bot, file_path)  # Assuming add_task() is a function to process the task
-            else:
-                await message.reply_text("Failed to download the file. Compression cannot proceed.", quote=True)
-    else:
-        if message.from_user.id not in Config.AUTH_USERS:
-            return
+                if file_path:
+                    await add_task(bot, file_path)  # Assuming add_task() is a function to process the task
+                else:
+                    await message.reply_text("Failed to download the file. Compression cannot proceed.", quote=True)
+        else:
+            if message.from_user.id not in Config.AUTH_USERS:
+                return
 
-        query = await message.reply_text("**Added this file to rename in queue.**", quote=True)
-        rename_queue.append(message)  # Assuming rename_queue is a list for renaming tasks
-        if len(rename_queue) == 1:
-            await query.delete()
-            await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename task
+            query = await message.reply_text("**Added this file to rename in queue.**", quote=True)
+            rename_queue.append(message)  # Assuming rename_queue is a list for renaming tasks
+            if len(rename_queue) == 1:
+                await query.delete()
+                await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename task
 
 if __name__ == "__main__":
+    # Your other code here
     # Your other code her
     # Your other code here
     # loop.run_untill_complete(start_bot())
