@@ -60,17 +60,20 @@ async def start_bot():
     await resume_task()
     await idle()
 
+# Your previous imports and setup code here
+
 async def resume_task():
     if myDB.llen("DBQueue") > 0:
         queue_ = myDB.lindex("DBQueue", 0)
         _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
         await add_task(TGBot, _queue)
 
-#if __name__ == "__main__":
-    #loop.run_untill_complete(start_bot())
-#rename_task.insert(0, "on")
+# Rest of your code
+# ...
+
 if __name__ == "__main__":
-    # Your other imports and setup code here
+    # Call your functions or define your setup here
+    await resume_task()
     
 @TGBot.on_message(filters.incoming & (filters.video | filters.document))
 async def wah_1_man(bot, message: Message):
