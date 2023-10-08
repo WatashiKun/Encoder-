@@ -204,7 +204,7 @@ async def start_cmd_handler(bot, message):
         text=Translation.START_TEXT,
         reply_markup=InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("📕Channel", url="https://t.me/AniVoid")]
+                [InlineKeyboardButton("📕Channel", url="https://t.me/Anime_Fusion_Hub")]
             ],
         ),
         parse_mode="md"
@@ -379,7 +379,7 @@ async def labour_encode(bot, update):
   logger.info(o)
   # upload event 
   if o is None:
-    await sent_message.edit_text("Either the current ffmpeg code didnt work on the file as it gave error or its an internal issue.\nContact the [dev](https://t.me/Bro_isDarkal)",
+    await sent_message.edit_text("Either the current ffmpeg code didnt work on the file as it gave error or its an internal issue.\nContact the [dev](https://t.me/Ninja_obito_sai)",
     disable_web_page_preview=True)
     os.remove(_f_n)
     return
