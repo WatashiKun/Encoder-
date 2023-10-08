@@ -63,7 +63,7 @@ async def anitopy_renamer(query):
     #title_ = title.replace("AnimeKayo", "")
   if episode == "Episode":
     bb = title.replace("S01E", "")
-    final = f"{bb} [{quality_[0]}] [{audio_[0]}] @AniVoid.mkv"
+    final = f"{bb} [{quality_[0]}] [{audio_[0]}] @Anime_Fusion_Hub.mkv"
    #final = f"{len(rename_queue)} - {title} [480p] [Sub] @AniVoid.mkv"
   else:
     if len(audio_) == 0:
