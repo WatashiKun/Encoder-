@@ -103,6 +103,7 @@ if __name__ == "__main__":
     pass 
 # Define the add_task function
 async def add_task(bot, message):
+    print("add_task called")
     # Your task processing logic here
     pass
    
