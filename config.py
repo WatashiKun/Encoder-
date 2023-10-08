@@ -20,9 +20,9 @@ Config.AUTH_USERS = [6440253535]
 Config.API_ID = 3847632
 Config.API_HASH = "1a9708f807ddd06b10337f2091c67657"
 Config.BOT_TOKEN = "6431767198:AAGCX8GtdDRxbX3WOkDHkQxqyo64-BS-BiA"
-Config.REDIS_HOST = "redis-12849.c84.us-east-1-2.ec2.cloud.redislabs.com"
-Config.REDIS_PASS = "7Sh7dHBfUEDvPdf1JLjty73JcN4omopO"
-REDIS_PORT = "12849"
+Config.REDIS_HOST = "redis-16727.c16.us-east-1-2.ec2.cloud.redislabs.com:16727"
+Config.REDIS_PASS = "7rcBuuSMeVtbxxeVD3zUEpr6ZS2YmLcK"
+REDIS_PORT = "16727"
 #.
 
 #.
