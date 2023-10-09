@@ -140,28 +140,6 @@ async def wah_1_man(bot, message: Message):
             if len(rename_queue) == 1:
                 await query.delete()
                 await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename task
-
-# Define the modified labour_encode function
-async def labour_encode(bot, update):
-    download_location = Config.DOWNLOAD_LOCATION + "/"
-    sent_message = await bot.send_message(
-        text="**DOWNLOADING**",
-        chat_id=update.chat.id,
-        reply_to_message_id=update.message_id
-    )
-
-    try:
-        # Download the file
-        c_time = time.time()
-        file_path = await bot.download_media(
-            message=update,
-            file_name=download_location,
-            progress=progress_for_pyrogram,
-            progress_args=(bot, "**DOWNLOADING**", sent_message, c_time)
-        )
-
-        if not file_path:
-            raise Exception("Failed to download the file.")
             
 @TGBot.on_message(filters.incoming & filters.command("rename_mode", prefixes=["/", "."]))
 async def rename_mode_command(bot, message):
@@ -369,70 +347,71 @@ async def clear_queue(bot, message):
     myDB.delete("DBQueue")
     await message.reply_text("Successfully cleared queue and removed from the database.", quote=True)
 
-
 async def labour_encode(bot, update):
-  download_location = Config.DOWNLOAD_LOCATION + "/"
-  sent_message = await bot.send_message(
-    text="**DOWNLOADING**",
-    chat_id=update.chat.id,
-    reply_to_message_id=update.message_id
-  )
-  c_time = time.time()
-  f_n = await bot.download_media(
-    message=update,
-    #myDB.lindex("DBQueue", 0),
-    #file_name=download_location,
-    progress=progress_for_pyrogram,
-    progress_args=(
-      bot,
-      "**DOWNLOADING**",
-      sent_message,
-      c_time
+    download_location = Config.DOWNLOAD_LOCATION + "/"
+    sent_message = await bot.send_message(
+        text="**DOWNLOADING**",
+        chat_id=update.chat.id,
+        reply_to_message_id=update.message_id
     )
-  )
-  logger.info(f_n)
-  await asyncio.sleep(1)
-  if f_n is not None:
-    await sent_message.edit_text("**TRYING TO ENCODE**")
-  # if not .mkv or.mp4 or .webm
-  if f_n.rsplit(".", 1)[-1].lower() not in ["mkv", "mp4", "webm", "avi"]:
-    return await sent_message.edit_text("This format isnt allowed , please send only either **MKV** or **MP4** files.")
-  # if in .mkv or .mp4 
-  if "`" in f_n:
-    _f_n = f_n.replace("`", "'")
-    os.rename(f_n, _f_n)
-  elif '"' in f_n:
-    _f_n = f_n.replace("`", "'")
-    os.rename(f_n, _f_n)
-  else:
-    _f_n = f_n
-  o = await en_co_de(
-    _f_n,
-    sent_message
-  )
-  logger.info(o)
-  # upload event 
-  if o is None:
-    await sent_message.edit_text("Either the current ffmpeg code didnt work on the file as it gave error or its an internal issue.\nContact the [dev](https://t.me/Ninja_obito_sai)",
-    disable_web_page_preview=True)
-    os.remove(_f_n)
-    return
-  if o is not None:
-    await sent_message.edit_text("UPLOADING")
-    upload = await bot.send_document(
-      chat_id=update.chat.id,
-      document=o,
-      force_document=True,
-      #caption="©️ @Animes_Encoded",
-      reply_to_message_id=update.message_id,
-      progress=progress_for_pyrogram,
-      progress_args=(bot, "UPLOADING", sent_message, c_time)
-    )
-    # remove uploaded file as it will free space
-    os.remove(o)
-    os.remove(_f_n)
-    # in order to make bot organised 
-    await sent_message.delete()
+    c_time = time.time()
+
+    try:
+        # Download the file
+        file_path = await bot.download_media(
+            message=update,
+            file_name=os.path.join(download_location, "downloaded_file"),
+            progress=progress_for_pyrogram,
+            progress_args=(bot, "**DOWNLOADING**", sent_message, c_time)
+        )
+
+        if not file_path:
+            raise Exception("Failed to download the file.")
+
+        await sent_message.edit_text("**TRYING TO ENCODE**")
+
+        # Check file format
+        valid_formats = ["mkv", "mp4", "webm", "avi"]
+        file_extension = file_path.rsplit(".", 1)[-1].lower()
+        if file_extension not in valid_formats:
+            os.remove(file_path)
+            return await sent_message.edit_text("This format isn't allowed. Please send only either **MKV** or **MP4** files.")
+
+        # Replace special characters in the file name
+        if "`" in file_path or '"' in file_path:
+            new_file_path = file_path.replace("`", "'").replace('"', "'")
+            os.rename(file_path, new_file_path)
+            file_path = new_file_path
+
+        # Encode the file
+        encoded_file_path = await en_co_de(file_path, sent_message)
+
+        # Check if encoding was successful
+        if encoded_file_path is None:
+            os.remove(file_path)
+            return await sent_message.edit_text("Encoding failed. Please contact the developer for assistance.")
+
+        # Upload the encoded file
+        await sent_message.edit_text("UPLOADING")
+        upload = await bot.send_document(
+            chat_id=update.chat.id,
+            document=encoded_file_path,
+            force_document=True,
+            reply_to_message_id=update.message_id,
+            progress=progress_for_pyrogram,
+            progress_args=(bot, "UPLOADING", sent_message, c_time)
+        )
+
+        # Remove uploaded and temporary files
+        os.remove(file_path)
+        os.remove(encoded_file_path)
+
+        # Delete the original message
+        await sent_message.delete()
+
+    except Exception as e:
+        await sent_message.edit_text(f"Error: {str(e)}")
+        logger.error(f"Error in labour_encode: {str(e)}")
   
 
 cb_bro = CallbackQueryHandler(cb_things)
