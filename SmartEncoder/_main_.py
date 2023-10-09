@@ -279,7 +279,7 @@ async def set_resolution(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
         return
     cr = message.text.split(" ", maxsplit=1)[1]
-    OUT = f"<b>I will use {cr} quality in renaming files<b>"
+    OUT = f"<b>I will use {cr} quality in renaming files</b>"
     quality_.insert(0, f"{cr}")
     await message.reply_text(OUT, quote=True)
 
@@ -298,7 +298,7 @@ async def set_audio_codec(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
         return
     cr = message.text.split(" ", maxsplit=1)[1]
-    OUT = f"<b>I will use {cr} audio codec in encoding files.<b>"
+    OUT = f"<b>I will use {cr} audio codec in encoding files.</b>"
     myDB.set("Audio_Codec", f"{cr}")
     await message.reply_text(OUT, quote=True)
 
@@ -307,7 +307,7 @@ async def set_watermark_position(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
         return
     cr = message.text.split(" ", maxsplit=1)[1]
-    OUT = f"<b>I have set watermark position to top {cr} corner.<b>"
+    OUT = f"<b>I have set watermark position to top {cr} corner.</b>"
     myDB.set("w_p", f"{cr}")
     if myDB.get("w_p") in ["Left", "left"]:
         myDB.set("w_po", "10")
