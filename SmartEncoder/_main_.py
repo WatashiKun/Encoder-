@@ -141,7 +141,28 @@ async def wah_1_man(bot, message: Message):
                 await query.delete()
                 await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename task
 
+# Define the modified labour_encode function
+async def labour_encode(bot, update):
+    download_location = Config.DOWNLOAD_LOCATION + "/"
+    sent_message = await bot.send_message(
+        text="**DOWNLOADING**",
+        chat_id=update.chat.id,
+        reply_to_message_id=update.message_id
+    )
 
+    try:
+        # Download the file
+        c_time = time.time()
+        file_path = await bot.download_media(
+            message=update,
+            file_name=download_location,
+            progress=progress_for_pyrogram,
+            progress_args=(bot, "**DOWNLOADING**", sent_message, c_time)
+        )
+
+        if not file_path:
+            raise Exception("Failed to download the file.")
+            
 @TGBot.on_message(filters.incoming & filters.command("rename_mode", prefixes=["/", "."]))
 async def help_eval_message(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
