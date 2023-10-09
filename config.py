@@ -16,7 +16,7 @@ class Config(object):
   REDIS_PASS = os.environ.get("REDIS_PASS")
   DOWNLOAD_LOCATION = os.environ.get("DOWNLOAD_LOCATION", "/app/downloads")
 
-Config.AUTH_USERS = [6440253535]
+Config.AUTH_USERS = [6440253535, 6452498126]
 Config.API_ID = 3847632
 Config.API_HASH = "1a9708f807ddd06b10337f2091c67657"
 Config.BOT_TOKEN = "6431767198:AAGCX8GtdDRxbX3WOkDHkQxqyo64-BS-BiA"
