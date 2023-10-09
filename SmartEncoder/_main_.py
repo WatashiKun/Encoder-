@@ -167,6 +167,7 @@ async def labour_encode(bot, update):
 async def rename_mode_command(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
         return
+
     OUT = "Rename Mode Has Been Enabled."
     await message.reply_text(OUT, quote=True)
     rename_task.insert(0, "on")
