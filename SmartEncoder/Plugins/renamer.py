@@ -25,7 +25,7 @@ from datetime import datetime as dt
 #from SmartEncoder.Plugins.compress import *
 # database 
 from SmartEncoder.Database.db import myDB
-import SmartEncoder.Plugins.Labour.py
+from SmartEncoder.Plugins.Labour import *
 from SmartEncoder.Plugins.Queue import *
 from SmartEncoder.Plugins.list import *
 from SmartEncoder.Tools.eval import *
