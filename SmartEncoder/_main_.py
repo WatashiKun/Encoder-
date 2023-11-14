@@ -3,7 +3,10 @@ import logging
 import asyncio 
 import time
 import pickle # to dumps/loads 
-import codecs # to encode/decode basically
+import codecs 
+from pyrogram import Client, filters
+from pyrogram.types import Message
+# to encode/decode basically
 #import requests
 #import json cuz i dont nedd this fucking module
 #import urllib3 as url ahh
