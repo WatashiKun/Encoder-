@@ -8,6 +8,8 @@ import pickle  # to dumps/loads
 import codecs  # to encode/decode basically
 import os
 from pathlib import Path
+from pyrogram import Client, filters
+from pyrogram.types import Message
 
 logging.basicConfig(
     level=logging.DEBUG,
