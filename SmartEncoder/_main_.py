@@ -38,7 +38,7 @@ from SmartEncoder.__init__ import *
 from SmartEncoder.Plugins.compress import en_co_de
 from SmartEncoder.Tools.progress import *
 from SmartEncoder.Plugins.list import *
-from SmartEncoder.Plugins.labour import *
+from SmartEncoder.Plugins.Labour import *
 from SmartEncoder.Addons.download import *
 
 mode_for_custom = []
