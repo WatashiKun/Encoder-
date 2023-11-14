@@ -1,15 +1,13 @@
-# i am using redis db. Its quite handy and easy. i used lists for queue. and redis can only store bytes, str, int or float. so i used codecs to encode list[0] in str then stored in db. when using the stored str, i equated it later decoded it back in its original type using 'codecs' module.
 import logging
 import asyncio 
 import time
-import pickle # to dumps/loads 
+import pickle
 import codecs 
 from pyrogram import Client, filters
 from pyrogram.types import Message
-# to encode/decode basically
-#import requests
-#import json cuz i dont nedd this fucking module
-#import urllib3 as url ahh
+import os
+from pathlib import Path
+from datetime import datetime as dt
 
 logging.basicConfig(
     level=logging.DEBUG, 
@@ -17,16 +15,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
-
 from pyrogram import Client
 from pyrogram.types import CallbackQuery
 from pyrogram.handlers import MessageHandler, CallbackQueryHandler
-
 from pyrogram.errors import FloodWait
-from datetime import datetime as dt
-#from SmartEncoder.Plugins.compress import *
-# database 
+
 from SmartEncoder.Database.db import myDB
 from SmartEncoder.Plugins.Queue import *
 from SmartEncoder.Plugins.list import *
@@ -38,32 +31,16 @@ from SmartEncoder.Addons.list_files import l_s
 from SmartEncoder.translation import Translation
 from SmartEncoder.Tools.progress import *
 from config import Config
-from pyrogram import filters, Client, idle
-from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
-from pathlib import Path
 from SmartEncoder.__init__ import *
-
-import os
-import time
-import asyncio 
-
-
-from SmartEncoder.Plugins.compress import en_co_de
-from SmartEncoder.Tools.progress import *
-from SmartEncoder.Plugins.list import *
-
 
 mode_for_custom = []
 uptime = dt.now()
 mode_for_custom.append("off")
 
-
 async def start_bot():
     await TGBot.start()
     await resume_task()
     await idle()
-
-# Your previous imports and setup code here
 
 async def resume_task():
     if myDB.llen("DBQueue") > 0:
@@ -71,7 +48,6 @@ async def resume_task():
         _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
         await add_task(TGBot, _queue)
 
-#if __name__ == "__main__":
 @TGBot.on_message(filters.incoming & (filters.video | filters.document))
 async def wah_1_man(bot, message: Message):
     if mode_for_custom[0] == "off":
@@ -80,20 +56,19 @@ async def wah_1_man(bot, message: Message):
 
         if rename_task[0] == "off":
             query = await message.reply_text("Added this file to queue.\nCompression will start soon.", quote=True)
-            a = message  # using 'a' as message is easy
+            a = message
             pickled = codecs.encode(pickle.dumps(a), "base64").decode()
-            myDB.rpush("DBQueue", pickled)  # Assuming myDB is the Redis database connection
+            myDB.rpush("DBQueue", pickled)
             if myDB.llen("DBQueue") == 1:
                 await query.delete()
 
-                # Download the file
                 file_path = await bot.download_media(
                     message=message,
                     file_name=os.path.join(Config.DOWNLOAD_LOCATION, "downloaded_file")
                 )
 
                 if file_path:
-                    await add_task(bot, file_path)  # Assuming add_task() is a function to process the task
+                    await add_task(bot, file_path)
                 else:
                     await message.reply_text("Failed to download the file. Compression cannot proceed.", quote=True)
         else:
@@ -101,11 +76,11 @@ async def wah_1_man(bot, message: Message):
                 return
 
             query = await message.reply_text("**Added this file to rename in queue.**", quote=True)
-            rename_queue.append(message)  # Assuming rename_queue is a list for renaming tasks
+            rename_queue.append(message)
             if len(rename_queue) == 1:
                 await query.delete()
-                await add_rename(bot, message)  # Assuming add_rename() is a function to process the rename task
-            
+                await add_rename(bot, message)
+
 @TGBot.on_message(filters.incoming & filters.command("rename_mode", prefixes=["/", "."]))
 async def rename_mode_command(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
@@ -114,13 +89,13 @@ async def rename_mode_command(bot, message):
     OUT = "Rename Mode Has Been Enabled."
     await message.reply_text(OUT, quote=True)
     rename_task.insert(0, "on")
-    
-TGBot.on_message(filters.incoming & filters.command("eval", prefixes=["/", "."]))
+
+@TGBot.on_message(filters.incoming & filters.command("eval", prefixes=["/", "."]))
 async def help_eval_message(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
         return
     await eval_handler(bot, message)
-  
+
 @TGBot.on_message(filters.command("dl", prefixes=["/", "."]))
 async def start_cmd_handler(bot, update):
     if update.from_user.id not in Config.AUTH_USERS:
@@ -147,7 +122,7 @@ async def u_l(bot, message):
         progress_args=(bot, "UPLOADING", boa, c_time)
     )
     await boa.delete()
-  
+
 @TGBot.on_message(filters.command("bash", prefixes=["/", "."]))
 async def start_cmd_handler(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
@@ -256,8 +231,7 @@ async def set_preset(bot, message):
     OUT = f"I will use {cr} preset in encoding files."
     myDB.set("speed", f"{cr}")
     await message.reply_text(OUT, quote=True)
-  
-# audio_mode ( for libopus and libfdk_aac support )
+
 @TGBot.on_message(filters.command("audio_codec"))
 async def set_audio_codec(bot, message):
     if message.from_user.id not in Config.AUTH_USERS:
@@ -322,7 +296,6 @@ async def labour_encode(bot, update):
     c_time = time.time()
 
     try:
-        # Download the file
         file_path = await bot.download_media(
             message=update,
             file_name=os.path.join(download_location, "downloaded_file"),
@@ -335,28 +308,23 @@ async def labour_encode(bot, update):
 
         await sent_message.edit_text("**TRYING TO ENCODE**")
 
-        # Check file format
         valid_formats = ["mkv", "mp4", "webm", "avi"]
         file_extension = file_path.rsplit(".", 1)[-1].lower()
         if file_extension not in valid_formats:
             os.remove(file_path)
             return await sent_message.edit_text("This format isn't allowed. Please send only either **MKV** or **MP4** files.")
 
-        # Replace special characters in the file name
         if "`" in file_path or '"' in file_path:
             new_file_path = file_path.replace("`", "'").replace('"', "'")
             os.rename(file_path, new_file_path)
             file_path = new_file_path
 
-        # Encode the file
         encoded_file_path = await en_co_de(file_path, sent_message)
 
-        # Check if encoding was successful
         if encoded_file_path is None:
             os.remove(file_path)
             return await sent_message.edit_text("Encoding failed. Please contact the developer for assistance.")
 
-        # Upload the encoded file
         await sent_message.edit_text("UPLOADING")
         upload = await bot.send_document(
             chat_id=update.chat.id,
@@ -367,17 +335,14 @@ async def labour_encode(bot, update):
             progress_args=(bot, "UPLOADING", sent_message, c_time)
         )
 
-        # Remove uploaded and temporary files
         os.remove(file_path)
         os.remove(encoded_file_path)
 
-        # Delete the original message
         await sent_message.delete()
 
     except Exception as e:
         await sent_message.edit_text(f"Error: {str(e)}")
         logger.error(f"Error in labour_encode: {str(e)}")
-  
 
 cb_bro = CallbackQueryHandler(cb_things)
 TGBot.add_handler(cb_bro)
