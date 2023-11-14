@@ -1,3 +1,6 @@
+import os
+import time
+import asyncio
 import logging
 import asyncio 
 import time
@@ -31,7 +34,10 @@ from SmartEncoder.Addons.list_files import l_s
 from SmartEncoder.translation import Translation
 from SmartEncoder.Tools.progress import *
 from config import Config
-from SmartEncoder.__init__ import *
+from SmartEncoder.__init__ import * 
+from SmartEncoder.Plugins.compress import en_co_de
+from SmartEncoder.Tools.progress import *
+from SmartEncoder.Plugins.list import *
 
 mode_for_custom = []
 uptime = dt.now()
