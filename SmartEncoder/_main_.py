@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from pyrogram import enums
+from pyrogram import *
 
 logging.basicConfig(
     level=logging.DEBUG,
