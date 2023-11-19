@@ -159,7 +159,7 @@ async def start_cmd_handler(bot, message):
                 ],
             ],
         ),
-        parse_mode="md"
+        parse_mode="markdown"
     )
 
 @TGBot.on_message(filters.incoming & filters.command(["ping"]))
