@@ -158,8 +158,7 @@ async def start_cmd_handler(bot, message):
                     InlineKeyboardButton("📕Channel", url="https://t.me/AnimeZenith")
                 ],
             ],
-        ),
-        parse_mode="html"
+        )
     )
 
 @TGBot.on_message(filters.incoming & filters.command(["ping"]))
