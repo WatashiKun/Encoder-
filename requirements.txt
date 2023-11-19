@@ -1,4 +1,4 @@
-Pyrogram==1.4
+Pyrogram
 tgcrypto 
 ethon==0.1.5
 redis
