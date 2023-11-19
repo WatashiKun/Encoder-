@@ -155,11 +155,11 @@ async def start_cmd_handler(bot, message):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("📕Channel", url="https://t.me/AniVoid")
+                    InlineKeyboardButton("📕Channel", url="https://t.me/AnimeZenith")
                 ],
             ],
         ),
-        parse_mode="markdown"
+        parse_mode="html"
     )
 
 @TGBot.on_message(filters.incoming & filters.command(["ping"]))
