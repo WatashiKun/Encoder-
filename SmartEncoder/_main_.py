@@ -8,7 +8,7 @@ import pickle  # to dumps/loads
 import codecs  # to encode/decode basically
 import os
 from pathlib import Path
-from pyrogram import Client, filters
+from pyrogram import Client, filters, idle
 from pyrogram.types import Message
 from pyrogram import enums
 
