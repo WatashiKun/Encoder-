@@ -1,5 +1,6 @@
 # I am using Redis DB. It's quite handy and easy. I used lists for the queue. Redis can only store bytes, str, int, or float. So I used codecs to encode list[0] as str and then stored it in the DB. When using the stored str, I later decoded it back to its original type using the 'codecs' module.
 
+
 from . import TGBot
 import logging
 import asyncio
@@ -13,8 +14,8 @@ from pyrogram.types import Message
 from pyrogram import enums
 
 logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+   level=logging.DEBUG,
+   format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -36,49 +37,77 @@ from SmartEncoder.Addons.list_files import l_s
 from SmartEncoder.translation import Translation
 from SmartEncoder.Tools.progress import *
 from config import Config
+from ATGAPI import generate_atg_link # Importing ATG API function
 
 mode_for_custom = []
 uptime = dt.now()
 mode_for_custom.append("off")
 
+# Preparation for 'checking_users' feature. A dict will store user ids and the
+# timestamp of when their 24h access started.
+checking_users = {}
+
 async def resume_task():
-    if myDB.llen("DBQueue") > 0:
-        queue_ = myDB.lindex("DBQueue", 0)
-        _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
-        await add_task(TGBot, _queue)
+   if myDB.llen("DBQueue") > 0:
+       queue_ = myDB.lindex("DBQueue", 0)
+       _queue = pickle.loads(codecs.decode(queue_.encode(), "base64"))
+       await add_task(TGBot, _queue)
 
 async def start_bot():
-    await TGBot.start()
-    await resume_task()
-    await idle()
+   await TGBot.start()
+   await resume_task()
+   await idle()
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(start_bot())
+   loop = asyncio.get_event_loop()
+   loop.run_until_complete(start_bot())
 
 rename_task.insert(0, "on")
 
+
+# Added user access control in existing function by introducing a check for if user
+# is in checking_users and if their access has expired.
 @TGBot.on_message(filters.incoming & (filters.video | filters.document))
 async def wah_1_man(bot, message: Message):
-    if mode_for_custom[0] == "off":
-        if message.from_user.id not in Config.AUTH_USERS:
-            return
-        if rename_task[0] == "off":
-            query = await message.reply_text("Added this file to the queue. Compression will start soon.", quote=True)
-            a = message  # using a as message is easy
-            pickled = codecs.encode(pickle.dumps(a), "base64").decode()
-            myDB.rpush("DBQueue", pickled)
-            if myDB.llen("DBQueue") == 1:
-                await query.delete()
-                await add_task(bot, message)
-        else:
-            if message.from_user.id not in Config.AUTH_USERS:
-                return
-            query = await message.reply_text("**Added this file to rename in the queue.**", quote=True)
-            rename_queue.append(message)
-            if len(rename_queue) == 1:
-                await query.delete()
-                await add_rename(bot, message)
+   if mode_for_custom[0] == "off":
+       # check if 24 hours have passed since user's access began
+       if message.from_user.id in checking_users and time.time() - checking_users[message.from_user.id] < 24*60*60:
+           query = await message.reply_text("Added this file to the queue. Compression will start soon.", quote=True)
+           a = message  
+           pickled = codecs.encode(pickle.dumps(a), "base64").decode()
+           myDB.rpush("DBQueue", pickled)
+           if myDB.llen("DBQueue") == 1:
+               await query.delete()
+               await add_task(bot, message)
+       else:
+           # inform the user that their access is expired or they don't have access
+           await bot.send_message(chat_id=message.chat.id, text="You either do not have access to the bot or your access has expired. Please contact the admin.")
+   else:
+       # check if user has access to bot and if not inform them
+       if message.from_user.id in checking_users and time.time() - checking_users[message.from_user.id] < 24*60*60:
+           query = await message.reply_text("**Added this file to rename in the queue.**", quote=True)
+           rename_queue.append(message)
+           if len(rename_queue) == 1:
+               await query.delete()
+               await add_rename(bot, message)
+       else:
+           await bot.send_message(chat_id=message.chat.id, text="You either do not have access to the bot or your access has expired. Please contact the admin.")
+
+@TGBot.on_message(filters.incoming & filters.command("get_atg_link", prefixes=["/", "."]))
+async def get_atg_link(bot, message):
+   # check if user has access to bot and if not inform them
+   if message.from_user.id in checking_users and time.time() - checking_users[message.from_user.id] < 24*60*60:
+       link = generate_atg_link()
+       await bot.send_message(chat_id=message.chat.id, text=f"Here is your ATG Link: {link}")
+   else:
+       await bot.send_message(chat_id=message.chat.id, text="You either do not have access to the bot or your access has expired. Please contact the admin.")
+
+@TGBot.on_message(filters.command("grant_access", prefixes=["/", "."]))
+async def grant_access(bot, message):
+   if message.from_user.id in Config.AUTH_USERS:
+       user_id = message.text.split(" ", maxsplit=1)[1]
+       checking_users[user_id] = time.time()
+       await bot.send_message(chat_id=message.chat.id, text=f"Access granted to user: {user_id} for 24 hours.")
 
 @TGBot.on_message(filters.incoming & filters.command("rename_mode", prefixes=["/", "."]))
 async def help_eval_message(bot, message):
